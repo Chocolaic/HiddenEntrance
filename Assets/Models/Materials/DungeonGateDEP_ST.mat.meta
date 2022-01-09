@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: db872190dd6beda4f8d77f0a3d7496ef
+labels:
+- dunngeon
+- gates
+- pbr
+- stone
+- structures
+- wood
+timeCreated: 1569584009
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: materials
+  assetBundleVariant: 
