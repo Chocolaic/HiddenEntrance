@@ -1,13 +1,19 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(MeshRenderer))]
 public class Gate : MonoBehaviour
 {
-    [SerializeField] RenderTexture m_renderTexture;
-    [SerializeField] Camera m_camera;
+    [SerializeField] Camera m_mainCamera, m_observCamera;
+
+    private RenderTexture _renderTexture;
+    private int _cullingLayer;
     private void Awake()
     {
-        m_renderTexture.width = Screen.width;
-        m_renderTexture.height = Screen.height;
+        _renderTexture = new RenderTexture(Screen.width, Screen.height, 24);
+        m_observCamera.targetTexture = _renderTexture;
+        GetComponent<MeshRenderer>().material.mainTexture = _renderTexture;
+
+        _cullingLayer = m_mainCamera.cullingMask;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -15,10 +21,13 @@ public class Gate : MonoBehaviour
         var localPos = transform.InverseTransformPoint(other.transform.position);
 
         if (localPos.z > 0)
-            SwitchCullMask(true);
+            m_mainCamera.cullingMask = _cullingLayer | 1 << LayerMask.NameToLayer("Observable");
     }
-    private void SwitchCullMask(bool on)
+    private void OnTriggerExit(Collider other)
     {
-        m_camera.cullingMask |= (on ? 1 : 0) << LayerMask.NameToLayer("Observable");
+        var localPos = transform.InverseTransformPoint(other.transform.position);
+
+        if (localPos.z > 0)
+            m_mainCamera.cullingMask = _cullingLayer;
     }
 }

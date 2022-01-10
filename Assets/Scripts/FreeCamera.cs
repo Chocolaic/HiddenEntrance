@@ -18,7 +18,7 @@ public class FreeCamera : MonoBehaviour
     private void Update()
     {
         _rotX = Mathf.Clamp(_rotX - Input.GetAxis("Mouse Y") * m_rotSpeed, -90f, 90f);
-        _rotY += Input.GetAxis("Mouse X") * m_rotSpeed;
+        _rotY = ClampRotation(_rotY + Input.GetAxis("Mouse X") * m_rotSpeed);
         m_camera.rotation = Quaternion.Euler(_rotX, _rotY, 0);
 
         var moveDirection = Vector3.zero;
@@ -32,5 +32,11 @@ public class FreeCamera : MonoBehaviour
         var eulerAngle = m_rigidbody.rotation.eulerAngles;
         _rotX = eulerAngle.x;
         _rotY = eulerAngle.y;
+    }
+    private float ClampRotation(float angle)
+    {
+        if (angle < 0) return angle + 360f;
+        if (angle > 360f) return angle - 360f;
+        return angle;
     }
 }
