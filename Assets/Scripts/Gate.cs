@@ -11,7 +11,7 @@ public class Gate : MonoBehaviour
     {
         _renderTexture = new RenderTexture(Screen.width, Screen.height, 24);
         m_observCamera.targetTexture = _renderTexture;
-        GetComponent<MeshRenderer>().material.mainTexture = _renderTexture;
+        GetComponent<MeshRenderer>().material.mainTexture = _renderTexture; 
 
         _cullingLayer = m_mainCamera.cullingMask;
     }
@@ -21,13 +21,19 @@ public class Gate : MonoBehaviour
         var localPos = transform.InverseTransformPoint(other.transform.position);
 
         if (localPos.z > 0)
+        {
+            other.gameObject.layer = LayerMask.NameToLayer("Accessible");
             m_mainCamera.cullingMask = _cullingLayer | 1 << LayerMask.NameToLayer("Observable");
+        }
     }
     private void OnTriggerExit(Collider other)
     {
         var localPos = transform.InverseTransformPoint(other.transform.position);
 
         if (localPos.z > 0)
+        {
+            other.gameObject.layer = LayerMask.NameToLayer("Default");
             m_mainCamera.cullingMask = _cullingLayer;
+        }
     }
 }
